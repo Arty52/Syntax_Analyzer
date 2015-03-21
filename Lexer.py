@@ -358,6 +358,8 @@ def main():
                 write_tokens_lexemes(tokens, lexemes, user_fh)
         else:
             break
-
+    
+    return tokens, lexemes
+    
 if __name__ == '__main__':
     main()
