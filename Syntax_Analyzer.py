@@ -39,15 +39,17 @@ def main():
     for i in range(len(tokens)):
         lex = Lex(tokens[i], lexemes[i])
         toProcess.append(lex)
-    
-    print('printing tokens from deque')
-    for i in range(len(toProcess)):
-        if toProcess[i].token != tokens[i]:
-            print('{}  {}'.format(toProcess[i].token, tokens[i]))
-    print('printing lexemes from deque')
-    for i in range(len(toProcess)):
-        if toProcess[i].lexeme != lexemes[i]:
-            print('{}  {}'.format(toProcess[i].lexeme, lexemes[i]))
+
+#DEBUG
+#compares tokens and lexemes together and outputs at user 'quit' if something isnt the same    
+    # print('printing tokens from deque')
+    # for i in range(len(toProcess)):
+    #     if toProcess[i].token != tokens[i]:
+            # print('{}  {}'.format(toProcess[i].token, tokens[i]))
+    # print('printing lexemes from deque')
+    # for i in range(len(toProcess)):
+    #     if toProcess[i].lexeme != lexemes[i]:
+    #         print('{}  {}'.format(toProcess[i].lexeme, lexemes[i]))
 
 
 if __name__ == '__main__':
