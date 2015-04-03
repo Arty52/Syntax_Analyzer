@@ -42,13 +42,12 @@ def main():
     
     print('printing tokens from deque')
     for i in range(len(toProcess)):
-        print(toProcess[i].token)
+        if toProcess[i].token != tokens[i]:
+            print('{}  {}'.format(toProcess[i].token, tokens[i]))
     print('printing lexemes from deque')
     for i in range(len(toProcess)):
-        print(toProcess[i].lexeme)
-
-    print(tokens)
-    print(lexemes)
+        if toProcess[i].lexeme != lexemes[i]:
+            print('{}  {}'.format(toProcess[i].lexeme, lexemes[i]))
 
 
 if __name__ == '__main__':
