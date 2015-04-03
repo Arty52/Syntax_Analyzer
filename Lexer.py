@@ -156,12 +156,12 @@ def lexer(todo):
             if todo:
                 token += todo.popleft()                      #getchar()
             elif any(char == '.' for char in token):
-                tokens.append('real   ')
+                tokens.append('real')
                 lexemes.append(token)
                 token = ''
                 break
             else:
-                tokens.append('integer ')
+                tokens.append('integer')
                 lexemes.append(token)
                 token = ''
                 break
@@ -169,14 +169,14 @@ def lexer(todo):
             if fsm_digits(token, state) == 1:
                 todo.appendleft(token[-1])
                 token = token[:-1]
-                tokens.append('integer ')
+                tokens.append('integer')
                 lexemes.append(token)
                 token = ''
 
             elif fsm_digits(token, state) == 3:
                 todo.appendleft(token[-1])
                 token = token[:-1]
-                tokens.append('real   ')
+                tokens.append('real')
                 lexemes.append(token)
                 token = ''
 
