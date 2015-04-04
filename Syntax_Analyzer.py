@@ -494,8 +494,52 @@ def relop():
     else:
         error('= |  !=  |   >   | <   |  =>   | <=') 
 
-# <Expression>  ::= <Expression> + <Term>  | <Expression>  - <Term>  | <Term>
-# <Term>    ::=  <Term> * <Factor>  | <Term> / <Factor> |  <Factor>
+# <Expression> ::= <Term> <ExpressionPrime>
+def expression():
+    if _print:
+        print('<Expression> ::= <Term> <ExpressionPrime>')
+    
+    term()
+    expressionPrime()
+
+# <ExpressionPrime> ::= + <Term> <ExpressionPrime> | - <Term> <ExpressionPrime> | <empty>
+def expressionPrime():
+    if _print:
+        print('<ExpressionPrime> ::= + <Term> <ExpressionPrime> | - <Term> <ExpressionPrime> | <empty>')
+    
+    if current.lexeme == '+' or current.lexeme == '-':
+        getNext()
+        term()
+        expressionPrime()
+    elif current.token == 'unknown':
+        error('+, -, <empty>')    
+    else:
+        empty()
+
+
+# <Term> ::= <Factor> <TermPrime>
+def term():
+    if _print:
+        print('<Term> ::= <Factor> <TermPrime>')
+    
+    factor()
+    termPrime()
+
+# <TermPrime> ::= * <Factor> <TermPrime> | / <Factor> <TermPrime> | <empty>
+def termPrime():
+    if _print:
+        print('<TermPrime> ::= * <Factor> <TermPrime> | / <Factor> <TermPrime> | <empty>')
+    
+    if current.lexeme == '*' or current.lexeme == '/':
+        getNext()
+        factor()
+        termPrime()
+    elif current.token == 'unknown':
+        error('*, /, <empty>')    
+    else:
+        empty()    
+
+
 
 # <Factor> ::= - <Primary> | <Primary>
 def factor():
@@ -574,7 +618,8 @@ def main():
         toProcess.append(lex)
     
     getNext()       #get first input
-    rat15S()
+    while toProcess:
+        rat15S()
 
 #DEBUG
 #compares tokens and lexemes together and outputs at user 'quit' if something isnt the same
