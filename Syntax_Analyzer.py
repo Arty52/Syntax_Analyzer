@@ -129,8 +129,47 @@ def body():
         error('{')
 
 # <Opt Declaration List> ::= <Declaration List>   | <Empty>
-# <Declaration List>  := <Declaration> ;  | <Declaration> ; <Declaration List>
+# <Declaration List> := <Declaration> ; | <Declaration> ; <Declaration List>
+def declarationList():
+    if _print:
+        print('<Declaration List> := <Declaration> ; | <Declaration> ; <Declaration List>')
+    
+    declaration()
+    getNext()
+    
+    if current.lexeme == ';':
+        getNext()
+        #see if the next is a qualifier --> int, boolean, real
+        if current.lexeme == 'int' or current.lexeme == 'boolean' or current.lexeme == 'real':
+            declarationList()
+    else:
+        error(';')
+    
+    # peek()
+    #
+    # while(True):
+    #     #see if the next is a qualifier --> int, boolean, real
+    #     if current.lexeme == ';' and any(peek_next.lexeme == 'int' or peek_next.lexeme == 'boolean' or peek_next.lexeme == 'real'):
+    #         getNext()
+    #         declaration()
+    #     elif current.lexeme == ';':
+    #         getNext()
+    #         break
+    #     else:
+    #         error(';')
+    #         break
+    #
+
+    
+
+
 # <Declaration> ::=  <Qualifier > <IDs>
+def declaration():
+    if _print:
+        print('<Declaration> ::= <Qualifier > <IDs>')
+    
+    qualifier()
+    ids()
 
 
 # <IDs> ::=  <Identifier> | <Identifier>, <IDs>
