@@ -62,28 +62,110 @@ def rat15S():
     if _print:
         print('<Rat15S>  ::=   <Opt Function Definitions>  @@  <Opt Declaration List> @@  <Statement List> ')
     
-    # getNext()
-    # if optFunctionDefinitions():
-    #     getNext()
-    #
-    #     if current.lexeme == '@@':
-    #         getNext()
-    #         optDeclarationList()
-    #     else:
-    #         print('ERROR: expected @@')
-    #
-    # else:
-    #     print('ERROR: Opt Function Definitions expected')
+    optFunctionDefinitions()
+    getNext()
     
-    
-    
+    if current.lexeme == '@@':
+        getNext()
+        optDeclarationList()
         
- 
+        if current.lexeme == '@@':
+            getNext()
+            statmentList()
+        
+        else:
+            error('@@')
+        
+    else:
+        error('@@')
+
 #<Opt Function Definitions> ::= <Function Definitions> | <Empty>
+def optFunctionDefinitions():
+    if _print:
+        print('<Opt Function Definitions> ::= <Function Definitions> | <Empty>') 
+    
+    if current.lexeme == 'function':
+        functionDefinitions()
+    elif current.token == 'unknown':
+        error('<Function Definitions> | <Empty>')
+    else:
+        empty()   
+
 #<Function Definitions>  ::= <Function> | <Function> <Function Definitions>   
+def functionDefinitions():
+    if _print:
+        print('<Function Definitions> ::= <Function> | <Function> <Function Definitions>')
+    
+    #continue gathering function definitions until there are no more to report
+    while(True):
+        function()
+        if current.lexeme != 'function':
+            break
+
 #<Function> ::= function  <Identifier> [ <Opt Parameter List> ]   <Opt Declaration List>  <Body>
+def function():
+    if _print:
+        print('<Function> ::= function  <Identifier> [ <Opt Parameter List> ]   <Opt Declaration List>  <Body>')
+    
+    #function
+    if current.lexeme == 'function':
+        getNext()
+    
+        #<Identifier>
+        if current.token == 'identifier':
+            getNext()
+            
+            # [
+            if current.lexeme == '[':
+                getNext()
+            
+                #<Opt Parameter List>
+                if current.token == 'identifier':
+                    getNext()
+                
+                    if current.lexeme == ']':
+                        getNext()
+                        optDeclarationList
+                        body()
+                    
+                    else:
+                        error(']')
+                
+                else:
+                    error('<Opt Parameter List>')
+            
+            else:
+                error('[')
+        
+        else:
+            error('<Identifier>')
+    
+    else:
+        error('function')
+
 # <Opt Parameter List> ::=  <Parameter List>   |  <Empty>
-# <Parameter List>  ::=  <Parameter>  | <Parameter> , <Parameter List>
+def optParameterList():
+    if _print:
+        print('<Opt Parameter List> ::=  <Parameter List> | <Empty>')
+    
+    if current.token == 'identifier':
+        parameterList()
+    elif current.token == 'unknown':
+        error('<Parameter List> | <Empty>')
+    else:
+        empty()
+
+# <Parameter List> ::= <Parameter> | <Parameter> , <Parameter List>
+def parameterList():
+    if _print:
+        print('<Parameter List> ::= <Parameter> | <Parameter> , <Parameter List>')
+    
+    parameter()
+    getNext()
+    
+    if current.lexeme == ',':
+        parameterList()
+
 # <Parameter> ::=  < IDs > : <Qualifier>
 def parameter():
     if _print:
@@ -128,7 +210,19 @@ def body():
     else:
         error('{')
 
-# <Opt Declaration List> ::= <Declaration List>   | <Empty>
+# <Opt Declaration List> ::= <Declaration List> | <Empty>
+def optDeclarationList():
+    if _print:
+        print('<Opt Declaration List> ::= <Declaration List> | <Empty>')
+    
+    #check for qualifier
+    if current.lexeme == 'int' or current.lexeme == 'boolean' or current.lexeme == 'real':
+        declarationList()
+    elif current.token == 'unknown':
+        error('<<Declaration List> | <Empty>')
+    else:
+        empty()
+
 # <Declaration List> := <Declaration> ; | <Declaration> ; <Declaration List>
 def declarationList():
     if _print:
@@ -181,7 +275,7 @@ def ids():
     
     # <Identifier> 
     if current.token != 'identifier':
-        error('<Identifier>'):
+        error('<Identifier>')
     elif current.token == 'identifier' and peek_next.lexeme != ',':
         getNext()
     else:
@@ -478,6 +572,9 @@ def main():
     for i in range(len(tokens)):
         lex = Lex(tokens[i], lexemes[i])
         toProcess.append(lex)
+    
+    getNext()       #get first input
+    rat15S()
 
 #DEBUG
 #compares tokens and lexemes together and outputs at user 'quit' if something isnt the same
