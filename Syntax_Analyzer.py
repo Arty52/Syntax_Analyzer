@@ -27,10 +27,20 @@ class Lex:
 print_production = True            #toggles print feature for the SA production
 toProcess = deque()
 current = Lex()
+error = True
 
 #set current to the next variable to process
 def getNext():
-    current = toProcess.popleft()  
+    if(toProcess):                          #if not empty
+        current = toProcess.popleft()
+        printInfo()
+
+def printInfo():
+    if(current):
+        if(print_production):
+            print('Token: {0:14} Lexeme: {1:1}'.format(current.token, current.lexeme))
+    else:
+        print('ERROR: current is empty')
     
 ####  Production Rules  ####
 #<Rat15S>  ::=   <Opt Function Definitions>  @@  <Opt Declaration List> @@  <Statement List> 
@@ -88,8 +98,7 @@ def relop():
        current.lexeme == '<' or current.lexeme == '=>' or current.lexeme == '<='):
         getNext()
     else:
-        error('= |  !=  |   >   | <   |  =>   | <=')
-    
+        error('= |  !=  |   >   | <   |  =>   | <=') 
 
 # <Expression>  ::= <Expression> + <Term>  | <Expression>  - <Term>  | <Term>
 # <Term>    ::=  <Term> * <Factor>  | <Term> / <Factor> |  <Factor>
@@ -110,8 +119,41 @@ def primary():
     if(print_production):
         print('<Primary> ::= <Identifier> | <Integer> | <Identifier> [<IDs>] | ( <Expression> ) |  <Real>  | true | false')
 
-#    if(current.token == 'identifier'):
-
+    if(current.token == 'identifier'):
+        getNext()
+        #must test if <Identifier> [<IDs>], if no bracket then its just an identifier
+        if(current.lexeme == '['):
+            getNext()
+            ids()
+            if(current == ']'): 
+                getNext()
+            else:
+                error(']')
+    #    <Integer>
+    elif(current.token == 'integer'):
+        getNext()
+    #    ( <Expression> ) 
+    elif(current.lexeme == '('):
+        getNext()
+        expression()
+        if (current.lexeme == ')'):
+            getNext()
+        else:
+            error(')')
+    #     <Real>        
+    elif(current.token == 'real'):
+        getNext()
+    #     true
+    elif(current.lexeme == 'true'):
+        getNext()
+    #     false
+    elif(current.lexeme == 'false'):
+        getNext()
+    
+    #else does not meet primary requirements
+    else:
+        error('<Identifier> | <Integer> | <Identifier> [<IDs>] | ( <Expression> ) |  <Real>  | true | false')
+        
 # <Empty> ::= ε
 def empty():
     if(print_production):
@@ -121,6 +163,12 @@ def error(expected):
     print('\nERROR\nExpected: {}'.format(expected))
     print('Current lexeme: {}'.format(current.lexeme))
     print('Current token: {}'.format(current.token))
+    
+    #trigger error
+    error = False
+    
+    #pop next and continue
+    getNext()
 
 def main():
     tokens = []
@@ -132,8 +180,6 @@ def main():
     for i in range(len(tokens)):
         lex = Lex(tokens[i], lexemes[i])
         toProcess.append(lex)
-    
-    relop()
 
 #DEBUG
 #compares tokens and lexemes together and outputs at user 'quit' if something isnt the same
