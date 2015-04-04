@@ -1,3 +1,9 @@
+#Art Grichine
+#Zeed Jarrah
+#ArtGrichine@csu.fullerton.edu
+#ZJarrah@csu.fullerton.edu
+#Syntax Analysis (Assignment 2)
+
 import sys
 import queue
 import Lexer
@@ -159,6 +165,7 @@ def empty():
     if(print_production):
         print('<Empty> ::= ε')
 
+#when an error is found, the expected variable is sent here and error is reported
 def error(expected):
     print('\nERROR\nExpected: {}'.format(expected))
     print('Current lexeme: {}'.format(current.lexeme))
@@ -170,6 +177,7 @@ def error(expected):
     #pop next and continue
     getNext()
 
+#purpose: Drive Syntax Analyser
 def main():
     tokens = []
     lexemes = []

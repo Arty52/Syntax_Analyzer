@@ -2,6 +2,7 @@
 #Zeed Jarrah
 #ArtGrichine@csu.fullerton.edu
 #ZJarrah@csu.fullerton.edu
+#Lexical Analyser (Assignment 1)
 
 import sys
 import queue
@@ -11,9 +12,23 @@ from collections import deque
 #Class that holds the token and corresponding lexeme
 #TODO
 class Lex:
-    def __init__(self, token, lexeme):
-        self.token = token
-        self.lexeme = lexeme
+    def __init__(self, token = None, lexeme = None):
+        self._token = token
+        self._lexeme = lexeme
+    
+    #token get/set/property
+    def setToken(self, token):
+        self._token = token
+    def getToken(self):
+        return self._token
+    token = property(getToken, setToken)
+    
+    #lexeme get/set/property
+    def setLexeme(self, lexeme):
+        self._lexeme = lexeme
+    def getLexeme(self):
+        return self._lexeme
+    lexeme = property(getLexeme, setLexeme)
 
 #input:  list of elements to process and current machine state
 #output: machine state value
@@ -183,7 +198,7 @@ def lexer(todo):
             continue            #return to the top of the loop      
         
         #check for identifier
-#        while token and any(char.isalpha() for char in token):
+        # while token and any(char.isalpha() for char in token):
         while token and token[0].isalpha():
             if todo:
                 token += todo.popleft()
@@ -308,7 +323,7 @@ def process_file(user_file):
                 print('File open!')
                 for i in fh:
                     line = i
-#                    line = i.rstrip()       #removes leading and trailing characters (e.g. EOF)
+                   # line = i.rstrip()       #removes leading and trailing characters (e.g. EOF)
                     file.append(line)
             else: 
                 print('File empty')
