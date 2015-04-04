@@ -2,7 +2,8 @@
 #Zeed Jarrah
 #ArtGrichine@csu.fullerton.edu
 #ZJarrah@csu.fullerton.edu
-#Syntax Analysis (Assignment 2)
+#Syntax Analyser (Assignment 2)
+#Requires Python version > 2.5 because of use of ternary operations
 
 import sys
 import queue
@@ -30,20 +31,26 @@ class Lex:
     lexeme = property(getLexeme, setLexeme)
     
 #Global Variables
-print_production = True            #toggles print feature for the SA production
+_print = True            #toggles print feature for the SA production
 toProcess = deque()
 current = Lex()
 error = True
+peek_next = Lex()
 
 #set current to the next variable to process
 def getNext():
-    if(toProcess):                          #if not empty
+    if toProcess:                          #if not empty
         current = toProcess.popleft()
         printInfo()
 
+#used to peek at the next variable in toProcess
+def peek():
+    if toProcess:
+        peek_next = toProcess[0]
+
 def printInfo():
-    if(current):
-        if(print_production):
+    if current.token:
+        if _print:
             print('Token: {0:14} Lexeme: {1:1}'.format(current.token, current.lexeme))
     else:
         print('ERROR: current is empty')
@@ -52,14 +59,14 @@ def printInfo():
 #<Rat15S>  ::=   <Opt Function Definitions>  @@  <Opt Declaration List> @@  <Statement List> 
 def rat15S():
     #initial production
-    if(print_production):
+    if _print:
         print('<Rat15S>  ::=   <Opt Function Definitions>  @@  <Opt Declaration List> @@  <Statement List> ')
     
     # getNext()
-    # if(optFunctionDefinitions()):
+    # if optFunctionDefinitions():
     #     getNext()
     #
-    #     if (current.lexeme == '@@'):
+    #     if current.lexeme == '@@':
     #         getNext()
     #         optDeclarationList()
     #     else:
@@ -77,31 +84,279 @@ def rat15S():
 #<Function> ::= function  <Identifier> [ <Opt Parameter List> ]   <Opt Declaration List>  <Body>
 # <Opt Parameter List> ::=  <Parameter List>   |  <Empty>
 # <Parameter List>  ::=  <Parameter>  | <Parameter> , <Parameter List>
-# <Parameter> ::=  <IDs > : <Qualifier>
-# <Qualifier> ::= int   |  boolean  |  real
+# <Parameter> ::=  < IDs > : <Qualifier>
+def parameter():
+    if _print:
+        print('<Parameter> ::=  < IDs > : <Qualifier>')
+    
+    if current.token == 'identifier':
+        ids()
+        getNext()
+        
+        if current.lexeme == ':':
+            getNext()
+            qualifier()
+        
+        else:
+            error('<Qualifier>')
+        
+    else:
+        error('< IDs >')
+
+
+# <Qualifier> ::= int | boolean | real
+def qualifier():
+    if _print:
+        print('<Qualifier> ::= int | boolean | real')
+    
+    if current.lexeme == 'int' or current.lexeme == 'boolean' or current.lexeme == 'real':
+        getNext()
+    else:
+        error('int | boolean | real')
+
 # <Body>  ::=  {  < Statement List>  }
+def body():
+    if _print:
+        print('<Body>  ::=  {  < Statement List>  }')
+    
+    if current.lexeme == '{':
+        getNext()
+        statementList()
+        
+        getNext() if current.lexeme == '}' else error('}')
+    
+    else:
+        error('{')
+
 # <Opt Declaration List> ::= <Declaration List>   | <Empty>
 # <Declaration List>  := <Declaration> ;  | <Declaration> ; <Declaration List>
 # <Declaration> ::=  <Qualifier > <IDs>
-# <IDs> ::=  <Identifier>    | <Identifier>, <IDs>
-# <Statement List> ::=  <Statement>   | <Statement> <Statement List>
+
+
+# <IDs> ::=  <Identifier> | <Identifier>, <IDs>
+def ids():
+    if _print:
+        print('<IDs> ::=  <Identifier> | <Identifier>, <IDs>')
+    
+    peek()
+    
+    # <Identifier> 
+    if current.token != 'identifier':
+        error('<Identifier>'):
+    elif current.token == 'identifier' and peek_next.lexeme != ',':
+        getNext()
+    else:
+        # <Identifier>, <IDs>
+        while True:
+            if current.token == 'identifier' and peek_next.lexeme == ',':
+                getNext()
+            elif current.token == 'identifier' and peek_next.lexeme != ',':
+                getNext()
+                break
+            else:
+                error('<Identifier>, <IDs>')
+
+# <Statement List> ::= <Statement> | <Statement> <Statement List>
+def statementList():
+    if _print:
+        print('<Statement List> ::= <Statement> | <Statement> <Statement List>')
+    
+    while True:
+        valid = statement()
+        #must test to see if possible statement. Will test for compound, assign, if, return, write,
+        #  read, while. If there is another statement then continue loop, otherwise break
+        if current.lexeme != '{' or current.token != 'identifier' or current.lexeme != 'if' or current.lexeme != 'return' or current.lexeme != 'write' or current.lexeme != 'read' or current.lexeme != 'while':
+            break
+
 # <Statement> ::=  <Compound> | <Assign> | <If> |  <Return> | <Write> | <Read> | <While>
+def statement():
+    if _print:
+        print('<Statement> ::=  <Compound> | <Assign> | <If> |  <Return> | <Write> | <Read> | <While>')
+    
+    #compound starts with '{' so we test for compound by looking for '{' lexeme in current
+    if current.lexeme == '{':
+        compound()
+    #assign starts with an identifier, test for assign by checking if 'identifier' token in current
+    elif current.token == 'identifier':
+        assign()
+    #if operations all start with 'if', check current lexeme for 'if'
+    elif current.lexeme == 'if':
+        _if()
+    #return operators start with return, check current lexeme for 'return'
+    elif current.lexeme == 'return':
+        _return()
+    #write begins with write, check current lexeme for 'write'
+    elif current.lexeme == 'write':
+        write()
+    #read begins with read, check current lexeme for 'read'
+    elif current.lexeme == 'read':
+        read()
+    #while begins with while, check current lexeme for 'while'
+    elif current.lexeme == 'while':
+        _while()
+    else:
+        error('<Compound> | <Assign> | <If> |  <Return> | <Write> | <Read> | <While>')
+
 # <Compound> ::= {  <Statement List>  }
+def compound():
+    if _print:
+        print('<Compound> ::= {  <Statement List>  }')
+    
+    if current.lexeme == '{':
+        getNext()
+        statementList()
+        
+        getNext() if current.lexeme == '}' else error('}')
+        
+        
+    else:
+        error('{')
+
 # <Assign> ::=   <Identifier> := <Expression> ;
+def assign():
+    if _print:
+        print('<Assign> ::=   <Identifier> := <Expression> ;')
+    
+    if current.token == 'identifier':
+        getNext()
+    
+        if current.lexeme == ':=':
+            getNext()
+            expression()
+        
+            getNext() if current.lexeme == ';' else error(';')
+                
+        else:
+            error(':=')
+    
+    else:
+        error('<Identifier>')
+
 # <If> ::= if ( <Condition>  ) <Statement> endif | if ( <Condition>  ) <Statement> else <Statement> endif
 # <Return> ::=  return ; |  return <Expression> ;
+def _return():
+    if _print:
+        print('<Return> ::=  return ; |  return <Expression> ;')
+    
+    peek()
+    
+    #condition 1:   return ;  
+    if peek_next.lexeme == ';':
+        
+        if current.lexeme == 'return':
+            getNext()   
+        
+            if current.lexeme == ';':
+                getNext()
+            else:
+                error(';')
+        
+        else:
+            error('return')
+    
+    #condition 2:   return <Expression> ;
+    else:
+        if current.lexeme == 'return':
+            getNext()
+            expression()
+            
+            getNext() if current.lexeme == ';' else error(';')
+            
+        else:
+            error('return')
+        
+
 # <Write> ::=   write ( <Expression>);
-# <Read> ::=    read ( <IDs> );
+def write():
+    if _print:
+        print('<Write> ::=   write ( <Expression>);')
+    
+    if current.lexeme == 'write':
+        getNext()
+        
+        if current.lexeme == '(':
+            getNext()
+            expression()
+        
+            if current.lexeme == ')':
+                getNext()
+                    
+                getNext() if current.lexeme == ';' else error(';')
+                
+            else:
+                error(')')
+        
+        else:
+            error('<Expression>')
+    
+    else:
+        error('write')
+
+# <Read> ::= read ( <IDs> );
+def read():
+    if _print:
+        print('<Read> ::= read ( <IDs> );')
+    
+    if current.lexeme == 'read':
+        getNext()
+        
+        if current.lexeme == '(':
+            getNext()
+            ids()
+            
+            if current.lexeme == ')':
+                getNext()
+                
+                getNext() if current.lexeme == ';' else error(';')
+                
+            else:
+                error(')')
+            
+        else:
+            error('(')
+    
+    else:
+        error('read')
+
 # <While> ::= while ( <Condition>  )  <Statement>
-# <Condition> ::= <Expression>  <Relop>   <Expression>
+def _while():
+    if _print:
+        print('<While> ::= while ( <Condition>  )  <Statement>')
+    
+    if current.lexeme == 'while':
+        getNext()
+        
+        if current.lexeme == '(':
+            getNext()
+            condition()
+            
+            if current.lexeme == ')':
+                getNext()
+                statement()
+            else:
+                error(')')
+        
+        else:
+            error('(')
+        
+    else:
+        error('while')
+
+# <Condition> ::= <Expression> <Relop> <Expression>
+def condition():
+    if _print:
+        print('<Condition> ::= <Expression> <Relop> <Expression>')
+    
+    expression()
+    relop()
+    expression()
 
 # <Relop> ::=   = |  !=  |   >   | <   |  =>   | <=
 def relop():
-    if(print_production):
+    if _print:
         print('<Relop> ::=   = |  !=  |   >   | <   |  =>   | <=')
     
-    if(current.lexeme == '=' or current.lexeme == '!=' or current.lexeme == '>' or 
-       current.lexeme == '<' or current.lexeme == '=>' or current.lexeme == '<='):
+    if current.lexeme == '=' or current.lexeme == '!=' or current.lexeme == '>' or current.lexeme == '<' or current.lexeme == '=>' or current.lexeme == '<=':
         getNext()
     else:
         error('= |  !=  |   >   | <   |  =>   | <=') 
@@ -111,49 +366,45 @@ def relop():
 
 # <Factor> ::= - <Primary> | <Primary>
 def factor():
-    if(print_production):
+    if _print:
         print('<Factor> ::= - <Primary> | <Primary>')
     
-    if(current == '-'):
+    if current == '-':
         getNext()
         primary()
     else:
         primary()
-
+        
 # <Primary> ::= <Identifier> | <Integer> | <Identifier> [<IDs>] | ( <Expression> ) |  <Real>  | true | false
 def primary():
-    if(print_production):
+    if _print:
         print('<Primary> ::= <Identifier> | <Integer> | <Identifier> [<IDs>] | ( <Expression> ) |  <Real>  | true | false')
 
-    if(current.token == 'identifier'):
+    if current.token == 'identifier':
         getNext()
         #must test if <Identifier> [<IDs>], if no bracket then its just an identifier
-        if(current.lexeme == '['):
+        if current.lexeme == '[':
             getNext()
             ids()
-            if(current == ']'): 
-                getNext()
-            else:
-                error(']')
+            getNext() if current == ']' else error(']')
+
     #    <Integer>
-    elif(current.token == 'integer'):
+    elif current.token == 'integer':
         getNext()
     #    ( <Expression> ) 
-    elif(current.lexeme == '('):
+    elif current.lexeme == '(':
         getNext()
         expression()
-        if (current.lexeme == ')'):
-            getNext()
-        else:
-            error(')')
+        getNext() if current.lexeme == ')' else error(')')
+
     #     <Real>        
-    elif(current.token == 'real'):
+    elif current.token == 'real':
         getNext()
     #     true
-    elif(current.lexeme == 'true'):
+    elif current.lexeme == 'true':
         getNext()
     #     false
-    elif(current.lexeme == 'false'):
+    elif current.lexeme == 'false':
         getNext()
     
     #else does not meet primary requirements
@@ -162,7 +413,7 @@ def primary():
         
 # <Empty> ::= ε
 def empty():
-    if(print_production):
+    if _print:
         print('<Empty> ::= ε')
 
 #when an error is found, the expected variable is sent here and error is reported
