@@ -600,7 +600,7 @@ def primary():
         if current.lexeme == '[':
             getNext()
             ids()
-            getNext() if current == ']' else error(']')
+            getNext() if current.lexeme == ']' else error(']')
 
     #    <Integer>
     elif current.token == 'integer':
