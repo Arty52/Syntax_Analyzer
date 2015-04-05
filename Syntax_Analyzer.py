@@ -37,14 +37,32 @@ current = Lex()
 error = True
 peek_next = Lex()
 
+
+#when an error is found, the expected variable is sent here and error is reported
+def error(expected):
+    print('\nERROR\nExpected: {}'.format(expected))
+    print('Current lexeme: {}'.format(current.lexeme))
+    print('Current token: {}'.format(current.token))
+    
+    #trigger error
+    error = False
+    
+    sys.exit()      #exit program
+    
+    #pop next and continue
+    # getNext()
+    
 #set current to the next variable to process
 def getNext():
-    if toProcess:                          #if not empty
+    global current                          #access the current global variable
+
+    if toProcess:                           #if not empty
         current = toProcess.popleft()
         printInfo()
 
 #used to peek at the next variable in toProcess
 def peek():
+    global peek_next                        #access the peek_next global variable
     if toProcess:
         peek_next = toProcess[0]
 
@@ -593,17 +611,6 @@ def empty():
     if _print:
         print('<Empty> ::= ε')
 
-#when an error is found, the expected variable is sent here and error is reported
-def error(expected):
-    print('\nERROR\nExpected: {}'.format(expected))
-    print('Current lexeme: {}'.format(current.lexeme))
-    print('Current token: {}'.format(current.token))
-    
-    #trigger error
-    error = False
-    
-    #pop next and continue
-    getNext()
 
 #purpose: Drive Syntax Analyser
 def main():
@@ -616,6 +623,7 @@ def main():
     for i in range(len(tokens)):
         lex = Lex(tokens[i], lexemes[i])
         toProcess.append(lex)
+    
     
     getNext()       #get first input
     while toProcess:

@@ -361,18 +361,18 @@ def main():
     
     
     #run loop until user enters quit
-    while True:
-        user_file = input('Enter file you would like to open (type "quit" to exit): ')
-        if user_file != 'quit':
-            todo, user_fh = process_file(user_file)
-            tokens, lexemes = lexer(todo)
-            
-            #if tokens/lexemes were processed, write to screen/file, otherwise file was
-            #not found therefore we dont have any tokens/lexemes to print
-            if tokens:
-                write_tokens_lexemes(tokens, lexemes, user_fh)
-        else:
-            break
+#    while True:
+    user_file = input('Enter file you would like to open (type "quit" to exit): ')
+    if user_file != 'quit':
+        todo, user_fh = process_file(user_file)
+        tokens, lexemes = lexer(todo)
+        
+        #if tokens/lexemes were processed, write to screen/file, otherwise file was
+        #not found therefore we dont have any tokens/lexemes to print
+        if tokens:
+            write_tokens_lexemes(tokens, lexemes, user_fh)
+    # else:
+    #     break
     
     return tokens, lexemes
     
