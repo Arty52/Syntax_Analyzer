@@ -88,7 +88,7 @@ def rat15S():
         
         if current.lexeme == '@@':
             getNext()
-            statmentList()
+            statementList()
         
         else:
             error('@@')
@@ -114,7 +114,7 @@ def functionDefinitions():
         print('<Function Definitions> ::= <Function> | <Function> <Function Definitions>')
     
     #continue gathering function definitions until there are no more to report
-    while(True):
+    while True:
         function()
         if current.lexeme != 'function':
             break
@@ -246,38 +246,19 @@ def declarationList():
         print('<Declaration List> := <Declaration> ; | <Declaration> ; <Declaration List>')
     
     declaration()
-    getNext()
     
     if current.lexeme == ';':
         getNext()
-        #see if the next is a qualifier --> int, boolean, real
+        #check if the next is a <Declaration List> by seeing if it's a qualifier --> int, boolean, real
         if current.lexeme == 'int' or current.lexeme == 'boolean' or current.lexeme == 'real':
             declarationList()
     else:
         error(';')
-    
-    # peek()
-    #
-    # while(True):
-    #     #see if the next is a qualifier --> int, boolean, real
-    #     if current.lexeme == ';' and any(peek_next.lexeme == 'int' or peek_next.lexeme == 'boolean' or peek_next.lexeme == 'real'):
-    #         getNext()
-    #         declaration()
-    #     elif current.lexeme == ';':
-    #         getNext()
-    #         break
-    #     else:
-    #         error(';')
-    #         break
-    #
-
-    
-
 
 # <Declaration> ::=  <Qualifier > <IDs>
 def declaration():
     if _print:
-        print('<Declaration> ::= <Qualifier > <IDs>')
+        print('<Declaration> ::= <Qualifier> <IDs>')
     
     qualifier()
     ids()
@@ -287,24 +268,21 @@ def declaration():
 def ids():
     if _print:
         print('<IDs> ::=  <Identifier> | <Identifier>, <IDs>')
-    
-    peek()
-    
-    # <Identifier> 
-    if current.token != 'identifier':
-        error('<Identifier>')
-    elif current.token == 'identifier' and peek_next.lexeme != ',':
+
+    if current.token == 'identifier':
         getNext()
-    else:
-        # <Identifier>, <IDs>
+        
+        #<Identifier>, <IDs>    break when no ',' after the identifier
         while True:
-            if current.token == 'identifier' and peek_next.lexeme == ',':
+            if current.lexeme == ',':
                 getNext()
-            elif current.token == 'identifier' and peek_next.lexeme != ',':
-                getNext()
-                break
+                
+                getNext() if current.token == 'identifier' else error('<Identifier>')
+                    
             else:
-                error('<Identifier>, <IDs>')
+                break
+    else:
+        error('<identifier>')
 
 # <Statement List> ::= <Statement> | <Statement> <Statement List>
 def statementList():
@@ -662,20 +640,7 @@ def main():
     #Syntax Analyser
     print('\nSyntax Analyser:')
     getNext()                           #get first input
-    # while toProcess:
     rat15S()
-
-#DEBUG
-#compares tokens and lexemes together and outputs at user 'quit' if something isnt the same
-#     print('printing tokens from deque')
-#     for i in range(len(toProcess)):
-#         if toProcess[i].token != tokens[i]:
-#         print('{}  {}'.format(toProcess[i].token, tokens[i]))
-#     print('printing lexemes from deque')
-#     for i in range(len(toProcess)):
-#         if toProcess[i].lexeme != lexemes[i]:
-#         print('{}  {}'.format(toProcess[i].lexeme, lexemes[i]))
-
 
 if __name__ == '__main__':
     main()
