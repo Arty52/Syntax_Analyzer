@@ -88,6 +88,7 @@ def rat15S():
         
         if current.lexeme == '@@':
             getNext()
+            #continue until EOF
             while True:
                 statementList()
                 if not toProcess:
@@ -293,10 +294,10 @@ def statementList():
         print('<Statement List> ::= <Statement> | <Statement> <Statement List>')
     
     while True:
-        valid = statement()
+        statement()
         #must test to see if possible statement. Will test for compound, assign, if, return, write,
         #  read, while. If there is another statement then continue loop, otherwise break
-        if current.lexeme != '{' or current.token != 'identifier' or current.lexeme != 'if' or current.lexeme != 'return' or current.lexeme != 'write' or current.lexeme != 'read' or current.lexeme != 'while':
+        if current.lexeme != '{' and current.token != 'identifier' and current.lexeme != 'if' and current.lexeme != 'return' and current.lexeme != 'write' and current.lexeme != 'read' and current.lexeme != 'while':
             break
 
 # <Statement> ::=  <Compound> | <Assign> | <If> |  <Return> | <Write> | <Read> | <While>
@@ -588,10 +589,10 @@ def factor():
     else:
         primary()
         
-# <Primary> ::= <Identifier> | <Integer> | <Identifier> [<IDs>] | ( <Expression> ) |  <Real>  | true | false
+# <Primary> ::= <Identifier> | <Integer> | <Identifier> [<IDs>] | ( <Expression> ) | <Real> | true | false
 def primary():
     if _print:
-        print('<Primary> ::= <Identifier> | <Integer> | <Identifier> [<IDs>] | ( <Expression> ) |  <Real>  | true | false')
+        print('<Primary> ::= <Identifier> | <Integer> | <Identifier> [<IDs>] | ( <Expression> ) | <Real> | true | false')
 
     if current.token == 'identifier':
         getNext()
