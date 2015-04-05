@@ -81,7 +81,6 @@ def rat15S():
         print('<Rat15S>  ::=   <Opt Function Definitions>  @@  <Opt Declaration List> @@  <Statement List> ')
     
     optFunctionDefinitions()
-    getNext()
     
     if current.lexeme == '@@':
         getNext()
@@ -146,7 +145,7 @@ def function():
                     getNext()
                     optDeclarationList()
                     body()
-                
+                    # print('\nIM OUT OF BODY()\n')
                 else:
                     error(']')
                 
@@ -437,10 +436,7 @@ def _return():
         if current.lexeme == 'return':
             getNext()   
         
-            if current.lexeme == ';':
-                getNext()
-            else:
-                error(';')
+            getNext() if current.lexeme == ';' else error(';')
         
         else:
             error('return')
@@ -449,8 +445,9 @@ def _return():
     else:
         if current.lexeme == 'return':
             getNext()
+            # print('\nIM IN OF EXPRESSION()\n')
             expression()
-            
+            # print('\nIM OUT OF EXPRESSION()\n')
             getNext() if current.lexeme == ';' else error(';')
             
         else:
@@ -626,6 +623,7 @@ def primary():
     #    <Integer>
     elif current.token == 'integer':
         getNext()
+        
     #    ( <Expression> ) 
     elif current.lexeme == '(':
         getNext()
@@ -664,8 +662,8 @@ def main():
     #Syntax Analyser
     print('\nSyntax Analyser:')
     getNext()                           #get first input
-    while toProcess:
-        rat15S()
+    # while toProcess:
+    rat15S()
 
 #DEBUG
 #compares tokens and lexemes together and outputs at user 'quit' if something isnt the same
