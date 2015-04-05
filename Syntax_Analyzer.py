@@ -88,7 +88,10 @@ def rat15S():
         
         if current.lexeme == '@@':
             getNext()
-            statementList()
+            while True:
+                statementList()
+                if not toProcess:
+                    break
         
         else:
             error('@@')
