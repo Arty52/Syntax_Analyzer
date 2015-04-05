@@ -384,6 +384,46 @@ def assign():
         error('<Identifier>')
 
 # <If> ::= if ( <Condition>  ) <Statement> endif | if ( <Condition>  ) <Statement> else <Statement> endif
+def _if():
+    if _print:
+        print('<If> ::= if ( <Condition> ) <Statement > <ifPrime>')
+    
+    if current.lexeme == 'if':
+        getNext()
+        
+        if current.lexeme == '(':
+            getNext()
+            condition()
+            
+            if current.lexeme == ')':
+                getnext()
+                statement()
+                ifPrime()
+            else:
+                error(')')
+        
+        else:
+            error('(')
+    
+    else:
+        error('if')
+
+# <ifPrime> ::= endif | else <Statement> endif
+def ifPrime():
+    if _print:
+        print('<ifPrime> ::= endif | else <Statement> endif')
+    
+    if current.lexeme == 'endif':
+        getNext()
+    elif current.lexeme == 'else':
+        getnext()
+        statement()
+        getNext() if current.lexeme == 'endif' else error('endif')
+    else:
+        error('endif | else')
+        
+
+
 # <Return> ::=  return ; |  return <Expression> ;
 def _return():
     if _print:
