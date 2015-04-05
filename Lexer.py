@@ -358,6 +358,7 @@ def main():
     lexemes = []          #will hold lexemes
     todo = []             #list of characters left to process
     user = ''             #users filehandle or escape command (quit)
+    dequeOfLex = deque()
     
     
     #run loop until user enters quit
@@ -374,7 +375,12 @@ def main():
     # else:
     #     break
     
-    return tokens, lexemes
+    #append and return tokens and lexemes to deque
+    for i in range(len(tokens)):
+        lex = Lex(tokens[i], lexemes[i])
+        dequeOfLex.append(lex)
+    
+    return dequeOfLex
     
 if __name__ == '__main__':
     main()

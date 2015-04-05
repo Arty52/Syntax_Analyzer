@@ -120,10 +120,10 @@ def functionDefinitions():
         if current.lexeme != 'function':
             break
 
-#<Function> ::= function  <Identifier> [ <Opt Parameter List> ]   <Opt Declaration List>  <Body>
+#<Function> ::= function  <Identifier> [ <Opt Parameter List> ] <Opt Declaration List>  <Body>
 def function():
     if _print:
-        print('<Function> ::= function  <Identifier> [ <Opt Parameter List> ]   <Opt Declaration List>  <Body>')
+        print('<Function> ::= function  <Identifier> [ <Opt Parameter List> ] <Opt Declaration List>  <Body>')
     
     #function
     if current.lexeme == 'function':
@@ -136,21 +136,22 @@ def function():
             # [
             if current.lexeme == '[':
                 getNext()
+                optParameterList()
             
-                #<Opt Parameter List>
-                if current.token == 'identifier':
-                    getNext()
+                # #<Opt Parameter List>
+                # if current.token == 'identifier':
+                #     getNext()
                 
-                    if current.lexeme == ']':
-                        getNext()
-                        optDeclarationList
-                        body()
-                    
-                    else:
-                        error(']')
+                if current.lexeme == ']':
+                    getNext()
+                    optDeclarationList()
+                    body()
                 
                 else:
-                    error('<Opt Parameter List>')
+                    error(']')
+                
+                # else:
+                #     error('<Opt Parameter List>')
             
             else:
                 error('[')
@@ -179,9 +180,9 @@ def parameterList():
         print('<Parameter List> ::= <Parameter> | <Parameter> , <Parameter List>')
     
     parameter()
-    getNext()
     
-    if current.lexeme == ',':
+    if peek_next.lexeme == ',':
+        getNext()
         parameterList()
 
 # <Parameter> ::=  < IDs > : <Qualifier>
@@ -190,7 +191,6 @@ def parameter():
         print('<Parameter> ::=  < IDs > : <Qualifier>')
     
     if current.token == 'identifier':
-        ids()
         getNext()
         
         if current.lexeme == ':':
@@ -656,16 +656,14 @@ def empty():
 def main():
     tokens = []
     lexemes = []
+    global toProcess                    #initilize toProcess variable as global so we can change it
     
     #call lexer
-    tokens, lexemes = Lexer.main()
-    #append tokens and lexemes to our global processing deque
-    for i in range(len(tokens)):
-        lex = Lex(tokens[i], lexemes[i])
-        toProcess.append(lex)
+    toProcess = Lexer.main()
     
-    
-    getNext()       #get first input
+    #Syntax Analyser
+    print('\nSyntax Analyser:')
+    getNext()                           #get first input
     while toProcess:
         rat15S()
 
