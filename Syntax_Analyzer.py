@@ -8,29 +8,12 @@
 import sys
 import queue
 import Lexer
+from Lexer import Lex
 from collections import deque
 
-#TODO, If there is time, move this to the Lexer.py program and have it return the deque containing the objects of Lex instead of just two lists.
-class Lex:
-    def __init__(self, token = None, lexeme = None):
-        self._token = token
-        self._lexeme = lexeme
-    
-    #token get/set/property
-    def setToken(self, token):
-        self._token = token
-    def getToken(self):
-        return self._token
-    token = property(getToken, setToken)
-    
-    #lexeme get/set/property
-    def setLexeme(self, lexeme):
-        self._lexeme = lexeme
-    def getLexeme(self):
-        return self._lexeme
-    lexeme = property(getLexeme, setLexeme)
-    
-#Global Variables
+####################
+##Global Variables##
+####################
 _printcmd = True            #toggles print to command terminal feature for the SA production
 _printfile = True           #toggles print to filehandle feature for the SA production
 toProcess = deque()
@@ -39,7 +22,7 @@ peek_next = Lex()
 _filename = None
 outputFileHandle = None
 _error = True
-
+    
 #reset global variables
 def reset():
     global toProcess                    #initilize toProcess variable as global so we can change it
