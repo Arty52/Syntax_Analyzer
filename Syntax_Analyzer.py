@@ -53,10 +53,6 @@ def error(expected):
         print('Current token: {}'.format(current.token), file = outputFileHandle)
     
     _error = False
-    # sys.exit()      #exit program
-    
-    #pop next and continue
-   # getNext()
    
 #set outputFileHandle 
 def setFileHandle():
@@ -82,16 +78,18 @@ def peek():
 def printInfo():
     if current.token:
         if _printcmd:
-            print('Token: {0:14} Lexeme: {1:1}'.format(current.token, current.lexeme))
+            print('Token: {0:14} Lexeme: {1:14} Line: {2:1}'.format(current.token, current.lexeme, current.line))
         if _printfile:
-            print('Token: {0:14} Lexeme: {1:1}'.format(current.token, current.lexeme), file = outputFileHandle)
+            print('Token: {0:14} Lexeme: {1:14} Line: {2:1}'.format(current.token, current.lexeme, current.line), file = outputFileHandle)
     else:
         if _printcmd:
             print('ERROR: current is empty')
         if _printfile:
             print('ERROR: current is empty', file = outputFileHandle)
-    
+
+############################    
 ####  Production Rules  ####
+############################
 #<Rat15S>  ::=   <Opt Function Definitions>  @@  <Opt Declaration List> @@  <Statement List> 
 def rat15S():
     #initial production
