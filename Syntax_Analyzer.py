@@ -34,7 +34,6 @@ class Lex:
 _print = True            #toggles print feature for the SA production
 toProcess = deque()
 current = Lex()
-error = True
 peek_next = Lex()
 
 
@@ -44,13 +43,10 @@ def error(expected):
     print('Current lexeme: {}'.format(current.lexeme))
     print('Current token: {}'.format(current.token))
     
-    #trigger error
-    error = False
-    
-    sys.exit()      #exit program
+    # sys.exit()      #exit program
     
     #pop next and continue
-    # getNext()
+#    getNext()
     
 #set current to the next variable to process
 def getNext():
@@ -638,13 +634,19 @@ def main():
     lexemes = []
     global toProcess                    #initilize toProcess variable as global so we can change it
     
-    #call lexer
-    toProcess = Lexer.main()
-    
-    #Syntax Analyser
-    print('\nSyntax Analyser:')
-    getNext()                           #get first input
-    rat15S()
+    while True:
+        #call lexer
+        toProcess = Lexer.main()
+        
+        if toProcess:    
+        #Syntax Analyser
+            print('\nSyntax Analyser:')
+            getNext()                           #get first input
+            rat15S()
+            
+        _continue = input('Would you like to process another file? (yes/no): ')
+        if _continue == 'no':
+            break
 
 if __name__ == '__main__':
     main()
