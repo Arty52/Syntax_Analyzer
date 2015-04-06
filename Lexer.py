@@ -13,6 +13,7 @@ from collections import deque
 _filename = None
 _linecounter = deque()
 _printcommand = True
+_fileNotFound = False
 
 #Class that holds the token and corresponding lexeme
 class Lex:
@@ -261,34 +262,11 @@ def lexer(todo):
     print('...Lexer complete!')
     return tokens, lexemes
 
-# #input:  List of tokens, lexemes, and string of filehandle
-# #output: None
-# def write_tokens_lexemes(tokens, lexemes, fh):
-#
-#     #print to screen
-#     if _printcommand:
-#         print('{0:14}{1:1}'.format('Tokens', 'Lexemes'))
-#         print('{0:14}{1:1}'.format('------','-------'))
-#         for i in range(len(tokens)):
-#             print('{0:14}{1:1}'.format(tokens[i], lexemes[i]))
-#
-#     #open file so that we can write to it. This will create a new file if DNE
-#     outputFileHandle = open(outputFilename(fh),'w')
-#
-#     #print to file
-#     print('{0:14}{1:1}'.format('Tokens', 'Lexemes'), file = outputFileHandle)
-#     print('{0:14}{1:1}'.format('------','-------'), file = outputFileHandle)
-#     for i in range(len(tokens)):
-#         print('{0:14}{1:1}'.format(tokens[i], lexemes[i]), file = outputFileHandle)
-#
-#     #close file after writing to it
-#     print('Your Tokens and Lexemes have been saved as {} in the working directory.'.format(outputFilename(fh)))
-#     outputFileHandle.close()
 
-#input:  List of tokens, lexemes, and string of filehandle
+
+#input:  A deque() containing Lex objects and string of filehandle
 #output: None
 def write_tokens_lexemes(deck, fh):
-
     #print to screen
     if _printcommand:
         print('{0:14}{1:14}{2:1}'.format('Tokens', 'Lexemes', 'Line'))
@@ -353,6 +331,7 @@ def check_separator(c):
 #output: List of characters that are in text file          
 def process_file(user_file):
     global _linecounter
+    global _fileNotFound
     value = 1
     file = []
     todo = deque()  
@@ -389,6 +368,7 @@ def process_file(user_file):
         print('')
     
     except FileNotFoundError:
+        _fileNotFound = True
         print('')
         print('Your file was not found!')
         print('')
@@ -406,7 +386,10 @@ def main():
     user = ''             #users filehandle or escape command (quit)
     dequeOfLex = deque()
     global _linecounter 
+    global _fileNotFound
+    _fileNotFound = False
     _linecounter = deque()
+    
     
     
     
@@ -417,22 +400,20 @@ def main():
         print('\nLexer working...')
         todo, user_fh = process_file(user_file)
         tokens, lexemes = lexer(todo)
-        
-        #if tokens/lexemes were processed, write to screen/file, otherwise file was
-        #not found therefore we dont have any tokens/lexemes to print
-        # if tokens:
-        #     write_tokens_lexemes(tokens, lexemes, user_fh)
-    # else:
-    #     break
+    #user wants to quit    
+    else:
+        sys.exit()
+     
+    if not _fileNotFound:    
+        #append tokens, lexemes, and line number to deque
+        for i in range(len(tokens)):
+            lex = Lex(tokens[i], lexemes[i], _linecounter[0])
+            for length in range(len(lex.lexeme)):
+                _linecounter.popleft()
+            dequeOfLex.append(lex)   
 
-    #append and return tokens and lexemes to deque
-    for i in range(len(tokens)):
-        lex = Lex(tokens[i], lexemes[i], _linecounter[0])
-        for length in range(len(lex.lexeme)):
-            _linecounter.popleft()
-        dequeOfLex.append(lex)   
-        
-    write_tokens_lexemes(dequeOfLex, user_fh)
+        #print the tokens, lexemes, and cooresponsing line number to user file
+        write_tokens_lexemes(dequeOfLex, user_fh)
     
     return dequeOfLex, _filename
     

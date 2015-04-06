@@ -3,8 +3,7 @@ Token: keyword        Lexeme: while
 <Opt Function Definitions> ::= <Function Definitions> | <Empty>
 <Empty> ::= ε
 
-ERROR
+ERROR line: 1
 Expected: @@
 Current lexeme: while
 Current token: keyword
-Current line: 1

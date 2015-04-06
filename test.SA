@@ -3,8 +3,7 @@ Token: identifier     Lexeme: hello
 <Opt Function Definitions> ::= <Function Definitions> | <Empty>
 <Empty> ::= ε
 
-ERROR
+ERROR line: 1
 Expected: @@
 Current lexeme: hello
 Current token: identifier
-Current line: 1
