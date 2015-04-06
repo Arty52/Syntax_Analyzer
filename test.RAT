@@ -1,0 +1,5 @@
+Tokens        Lexemes
+------        -------
+identifier    hello
+identifier    there
+identifier    world

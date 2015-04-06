@@ -11,27 +11,35 @@ from collections import deque
 
 #global, will pass back to the SA for output
 _filename = None
+_linecounter = deque()
 
 #Class that holds the token and corresponding lexeme
-#TODO
 class Lex:
-    def __init__(self, token = None, lexeme = None):
+    def __init__(self, token = None, lexeme = None, line = None):
         self._token = token
         self._lexeme = lexeme
+        self._line = line
     
-    #token get/set/property
+    #token get/set property
     def setToken(self, token):
         self._token = token
     def getToken(self):
         return self._token
     token = property(getToken, setToken)
     
-    #lexeme get/set/property
+    #lexeme get/set property
     def setLexeme(self, lexeme):
         self._lexeme = lexeme
     def getLexeme(self):
         return self._lexeme
     lexeme = property(getLexeme, setLexeme)
+    
+    #line get/set property
+    def setLine(self, line):
+        self._line = line
+    def getLine(self):
+        return self._line
+    line = property(getLine, setLine)  
 
 #input:  list of elements to process and current machine state
 #output: machine state value
@@ -316,6 +324,8 @@ def check_separator(c):
 #input:  User's filename
 #output: List of characters that are in text file          
 def process_file(user_file):
+    global _linecounter
+    value = 1
     file = []
     todo = deque()  
       
@@ -342,8 +352,11 @@ def process_file(user_file):
             for j in i:
                 if j == '\n':
                     todo.append(' ')
+                    value += 1
                 else:
                     todo.append(j)
+                    if j != ' ':
+                        _linecounter.append(value)
         print('-----------------')
         print('')
     
@@ -364,10 +377,13 @@ def main():
     todo = []             #list of characters left to process
     user = ''             #users filehandle or escape command (quit)
     dequeOfLex = deque()
+    global _linecounter 
+    _linecounter = deque()
+    
     
     
     #run loop until user enters quit
-#    while True:
+   # while True:
     user_file = input('Enter file you would like to open (type "quit" to exit): ')
     if user_file != 'quit':
         todo, user_fh = process_file(user_file)
@@ -379,11 +395,16 @@ def main():
             write_tokens_lexemes(tokens, lexemes, user_fh)
     # else:
     #     break
-    
+
     #append and return tokens and lexemes to deque
     for i in range(len(tokens)):
-        lex = Lex(tokens[i], lexemes[i])
-        dequeOfLex.append(lex)
+        lex = Lex(tokens[i], lexemes[i], _linecounter[0])
+        for length in range(len(lex.lexeme)):
+            _linecounter.popleft()
+        dequeOfLex.append(lex)   
+    
+    for l in dequeOfLex:
+        print('token: {0:10} lexeme: {1:10} line: {2:1}'.format(l.token, l.lexeme, l.line))
     
     return dequeOfLex, _filename
     
