@@ -407,7 +407,7 @@ def assign():
     else:
         error('<Identifier>')
 
-# <If> ::= if ( <Condition>  ) <Statement> endif | if ( <Condition>  ) <Statement> else <Statement> endif
+# <If> ::= if ( <Condition> ) <Statement> endif | if ( <Condition>  ) <Statement> else <Statement> endif
 def _if():
     if _printcmd:
         print('<If> ::= if ( <Condition> ) <Statement > <ifPrime>')
@@ -701,9 +701,9 @@ def primary():
 # <Empty> ::= ε
 def empty():
     if _printcmd:
-        print('<Empty> ::= ε')
+        print('<Empty> ::= epsilon')
     if _printfile:
-        print('<Empty> ::= ε', file = outputFileHandle)
+        print('<Empty> ::= epsilon', file = outputFileHandle)
 
 
 #purpose: Drive Syntax Analyser
