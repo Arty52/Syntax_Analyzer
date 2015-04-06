@@ -9,6 +9,9 @@ import queue
 import itertools, collections
 from collections import deque
 
+#global, will pass back to the SA for output
+_filename = None
+
 #Class that holds the token and corresponding lexeme
 #TODO
 class Lex:
@@ -275,10 +278,12 @@ def write_tokens_lexemes(tokens, lexemes, fh):
 #input:  filename
 #output: filename with the proper extension
 def outputFilename(filename):
+    global _filename
     #example input is 'foo.txt'
     #        output is 'foo.RAT'
     dotIndex = filename.find('.')      #find '.'
     name = filename[:dotIndex]         #start at beginning and go to dotIndex
+    _filename = name
     extension = '.RAT'
     return name + extension    
 
@@ -380,7 +385,7 @@ def main():
         lex = Lex(tokens[i], lexemes[i])
         dequeOfLex.append(lex)
     
-    return dequeOfLex
+    return dequeOfLex, _filename
     
 if __name__ == '__main__':
     main()

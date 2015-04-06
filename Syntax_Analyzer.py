@@ -35,7 +35,22 @@ _print = True            #toggles print feature for the SA production
 toProcess = deque()
 current = Lex()
 peek_next = Lex()
+_filename = None
+outputFileHandle = None
 
+#reset global variables
+def reset():
+    global toProcess                    #initilize toProcess variable as global so we can change it
+    global outputFileHandle
+    global _filename
+    global peek_next
+    global current
+    
+    toProcess = deque()
+    outputFileHandle = None
+    _filename = None
+    peek_next = Lex()
+    current = Lex()
 
 #when an error is found, the expected variable is sent here and error is reported
 def error(expected):
@@ -46,7 +61,14 @@ def error(expected):
     # sys.exit()      #exit program
     
     #pop next and continue
-#    getNext()
+   # getNext()
+   
+#set outputFileHandle 
+def setFileHandle():
+    #tell python we willingly want to change the global variable outputFileHandle
+    global outputFileHandle
+    outputFileHandle = open(_filename + '.SA','w')
+    print('testing', file = outputFileHandle)
     
 #set current to the next variable to process
 def getNext():
@@ -633,17 +655,25 @@ def main():
     tokens = []
     lexemes = []
     global toProcess                    #initilize toProcess variable as global so we can change it
+    global _filename
+
     
     while True:
+        #reset global variables after loop
+        reset()
+        
         #call lexer
-        toProcess = Lexer.main()
+        #returned from Lexer.main() is deque containing lexers and filename of processed file
+        toProcess, _filename = Lexer.main()             
         
         if toProcess:    
         #Syntax Analyser
+            setFileHandle()
             print('\nSyntax Analyser:')
-            getNext()                           #get first input
-            rat15S()
-            
+            getNext()                           #get input
+            rat15S()                            #call Syntax Analyser
+        
+        #ask user if they would like to run another file    
         _continue = input('Would you like to process another file? (yes/no): ')
         if _continue == 'no':
             break
