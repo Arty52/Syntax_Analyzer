@@ -12,6 +12,7 @@ from collections import deque
 #global, will pass back to the SA for output
 _filename = None
 _linecounter = deque()
+_printcommand = True
 
 #Class that holds the token and corresponding lexeme
 class Lex:
@@ -257,30 +258,57 @@ def lexer(todo):
         tokens.append('unknown')
         lexemes.append(token)  
     
+    print('...Lexer complete!')
     return tokens, lexemes
+
+# #input:  List of tokens, lexemes, and string of filehandle
+# #output: None
+# def write_tokens_lexemes(tokens, lexemes, fh):
+#
+#     #print to screen
+#     if _printcommand:
+#         print('{0:14}{1:1}'.format('Tokens', 'Lexemes'))
+#         print('{0:14}{1:1}'.format('------','-------'))
+#         for i in range(len(tokens)):
+#             print('{0:14}{1:1}'.format(tokens[i], lexemes[i]))
+#
+#     #open file so that we can write to it. This will create a new file if DNE
+#     outputFileHandle = open(outputFilename(fh),'w')
+#
+#     #print to file
+#     print('{0:14}{1:1}'.format('Tokens', 'Lexemes'), file = outputFileHandle)
+#     print('{0:14}{1:1}'.format('------','-------'), file = outputFileHandle)
+#     for i in range(len(tokens)):
+#         print('{0:14}{1:1}'.format(tokens[i], lexemes[i]), file = outputFileHandle)
+#
+#     #close file after writing to it
+#     print('Your Tokens and Lexemes have been saved as {} in the working directory.'.format(outputFilename(fh)))
+#     outputFileHandle.close()
 
 #input:  List of tokens, lexemes, and string of filehandle
 #output: None
-def write_tokens_lexemes(tokens, lexemes, fh):          
-    
+def write_tokens_lexemes(deck, fh):
+
     #print to screen
-    print('{0:14}{1:1}'.format('Tokens', 'Lexemes'))
-    print('{0:14}{1:1}'.format('------','-------'))
-    for i in range(len(tokens)):
-        print('{0:14}{1:1}'.format(tokens[i], lexemes[i]))
-        
+    if _printcommand:
+        print('{0:14}{1:14}{2:1}'.format('Tokens', 'Lexemes', 'Line'))
+        print('{0:14}{1:14}{2:1}'.format('------','-------', '----'))
+        for l in deck:
+            print('{0:14}{1:14}{2:1}'.format(l.token, l.lexeme, l.line))
+
     #open file so that we can write to it. This will create a new file if DNE
     outputFileHandle = open(outputFilename(fh),'w')
-        
+
     #print to file
-    print('{0:14}{1:1}'.format('Tokens', 'Lexemes'), file = outputFileHandle)
-    print('{0:14}{1:1}'.format('------','-------'), file = outputFileHandle)
-    for i in range(len(tokens)):
-        print('{0:14}{1:1}'.format(tokens[i], lexemes[i]), file = outputFileHandle)
-    
+    print('{0:14}{1:14}{2:1}'.format('Tokens', 'Lexemes', 'Line'), file = outputFileHandle)
+    print('{0:14}{1:14}{2:1}'.format('------','-------', '----'), file = outputFileHandle)
+    for l in deck:
+        print('{0:14}{1:14}{2:1}'.format(l.token, l.lexeme, l.line), file = outputFileHandle)
+
     #close file after writing to it
     print('Your Tokens and Lexemes have been saved as {} in the working directory.'.format(outputFilename(fh)))
-    outputFileHandle.close()            
+    outputFileHandle.close()
+
 
 #Purpose: to make an output file name from the initial user entered file
 #input:  filename
@@ -386,13 +414,14 @@ def main():
    # while True:
     user_file = input('Enter file you would like to open (type "quit" to exit): ')
     if user_file != 'quit':
+        print('\nLexer working...')
         todo, user_fh = process_file(user_file)
         tokens, lexemes = lexer(todo)
         
         #if tokens/lexemes were processed, write to screen/file, otherwise file was
         #not found therefore we dont have any tokens/lexemes to print
-        if tokens:
-            write_tokens_lexemes(tokens, lexemes, user_fh)
+        # if tokens:
+        #     write_tokens_lexemes(tokens, lexemes, user_fh)
     # else:
     #     break
 
@@ -402,9 +431,8 @@ def main():
         for length in range(len(lex.lexeme)):
             _linecounter.popleft()
         dequeOfLex.append(lex)   
-    
-    for l in dequeOfLex:
-        print('token: {0:10} lexeme: {1:10} line: {2:1}'.format(l.token, l.lexeme, l.line))
+        
+    write_tokens_lexemes(dequeOfLex, user_fh)
     
     return dequeOfLex, _filename
     

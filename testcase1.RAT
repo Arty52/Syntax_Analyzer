@@ -1,37 +1,37 @@
-Tokens        Lexemes
-------        -------
-keyword       while
-separator     (
-identifier    fahr
-operator      <
-identifier    celc
-separator     )
-operator      :=
-integer       15
-separator     ;
-unknown       _hello
-keyword       real
-identifier    world
-separator     [
-operator      !=
-separator     ]
-operator      @@
-keyword       while
-operator      !=
-keyword       real
-identifier    temp
-operator      :=
-real          2.2
-separator     ;
-unknown       &&
-operator      @@
-unknown       %%s5t4
-integer       4
-identifier    e
-separator     :
-integer       12345
-identifier    b98765
-identifier    jkjkjk
-integer       123
-identifier    jka
-unknown       ?
+Tokens        Lexemes       Line
+------        -------       ----
+keyword       while         1
+separator     (             1
+identifier    fahr          1
+operator      <             1
+identifier    celc          1
+separator     )             1
+operator      :=            1
+integer       15            1
+separator     ;             1
+unknown       _hello        2
+keyword       real          2
+identifier    world         2
+separator     [             2
+operator      !=            2
+separator     ]             2
+operator      @@            3
+keyword       while         3
+operator      !=            3
+keyword       real          3
+identifier    temp          3
+operator      :=            3
+real          2.2           3
+separator     ;             3
+unknown       &&            4
+operator      @@            4
+unknown       %%s5t4        4
+integer       4             4
+identifier    e             4
+separator     :             4
+integer       12345         5
+identifier    b98765        5
+identifier    jkjkjk        5
+integer       123           5
+identifier    jka           5
+unknown       ?             5

@@ -1,67 +1,67 @@
-Tokens        Lexemes
-------        -------
-keyword       function
-identifier    conver
-separator     [
-identifier    fahr
-separator     :
-keyword       int
-separator     ]
-separator     {
-keyword       return
-integer       5
-operator      *
-separator     (
-identifier    fahr
-operator      -
-integer       32
-separator     )
-operator      /
-integer       9
-separator     ;
-separator     }
-operator      @@
-keyword       int
-identifier    low
-separator     ,
-identifier    high
-separator     ,
-identifier    step
-separator     ;
-operator      @@
-keyword       read
-separator     (
-identifier    low
-separator     ,
-identifier    high
-separator     ,
-identifier    step
-separator     )
-separator     ;
-keyword       while
-separator     (
-identifier    low
-operator      <
-identifier    high
-separator     )
-separator     {
-keyword       write
-separator     (
-identifier    low
-separator     )
-separator     ;
-keyword       write
-separator     (
-identifier    convert
-separator     [
-identifier    low
-separator     ]
-separator     )
-separator     ;
-identifier    low
-operator      :=
-identifier    low
-operator      +
-identifier    step
-separator     ;
-separator     }
+Tokens        Lexemes       Line
+------        -------       ----
+keyword       function      1
+identifier    conver        1
+separator     [             1
+identifier    fahr          1
+separator     :             1
+keyword       int           1
+separator     ]             1
+separator     {             2
+keyword       return        3
+integer       5             3
+operator      *             3
+separator     (             3
+identifier    fahr          3
+operator      -             3
+integer       32            3
+separator     )             3
+operator      /             3
+integer       9             3
+separator     ;             3
+separator     }             4
+operator      @@            6
+keyword       int           7
+identifier    low           7
+separator     ,             7
+identifier    high          7
+separator     ,             7
+identifier    step          7
+separator     ;             7
+operator      @@            9
+keyword       read          10
+separator     (             10
+identifier    low           10
+separator     ,             10
+identifier    high          10
+separator     ,             10
+identifier    step          10
+separator     )             10
+separator     ;             10
+keyword       while         11
+separator     (             11
+identifier    low           11
+operator      <             11
+identifier    high          11
+separator     )             11
+separator     {             12
+keyword       write         13
+separator     (             13
+identifier    low           13
+separator     )             13
+separator     ;             13
+keyword       write         14
+separator     (             14
+identifier    convert       14
+separator     [             14
+identifier    low           14
+separator     ]             14
+separator     )             14
+separator     ;             14
+identifier    low           15
+operator      :=            15
+identifier    low           15
+operator      +             15
+identifier    step          15
+separator     ;             15
+separator     }             16

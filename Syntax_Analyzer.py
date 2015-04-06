@@ -14,7 +14,7 @@ from collections import deque
 ####################
 ##Global Variables##
 ####################
-_printcmd = True            #toggles print to command terminal feature for the SA production
+_printcmd = False            #toggles print to command terminal feature for the SA production
 _printfile = True           #toggles print to filehandle feature for the SA production
 toProcess = deque()
 current = Lex()
@@ -42,12 +42,11 @@ def reset():
 #when an error is found, the expected variable is sent here and error is reported
 def error(expected):
     global _error
-    
-    if _printcmd:
-        print('\nERROR\nExpected: {}'.format(expected))
-        print('Current lexeme: {}'.format(current.lexeme))
-        print('Current token: {}'.format(current.token))
-        print('Current line: {}'.format(current.line))
+        
+    print('\nERROR\nExpected: {}'.format(expected))
+    print('Current lexeme: {}'.format(current.lexeme))
+    print('Current token: {}'.format(current.token))
+    print('Current line: {}'.format(current.line))
     
     if _printfile:
         print('\nERROR\nExpected: {}'.format(expected), file = outputFileHandle)
@@ -748,7 +747,7 @@ def main():
             print('Your syntactic analysis of {} has been saved as {} in the working directory.'.format(_filename,_filename + '.SA'))
         
         #ask user if they would like to run another file    
-        _continue = input('Would you like to process another file? (yes/no): ')
+        _continue = input('\nWould you like to process another file? (yes/no): ')
         if _continue == 'no':
             break
 
