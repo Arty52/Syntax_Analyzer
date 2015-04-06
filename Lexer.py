@@ -12,7 +12,7 @@ from collections import deque
 #global, will pass back to the SA for output
 _filename = None
 _linecounter = deque()
-_printcommand = True
+_printcommand = False               #toggle print to the command terminal
 _fileNotFound = False
 
 #Class that holds the token and corresponding lexeme
@@ -341,7 +341,7 @@ def process_file(user_file):
     try:
         with open(user_file) as fh:
      #   with open('testcase1.txt') as fh:          #implicitly open and close the file
-            if (fh): 
+            if (fh):
                 print('File open!')
                 for i in fh:
                     line = i
@@ -351,11 +351,13 @@ def process_file(user_file):
                 print('File empty')
     
         #print contents of file
-        print('')
-        print('Contents of file:')
-        print('-----------------')
+        if _printcommand:
+            print('')
+            print('Contents of file:')
+            print('-----------------')
         for i in file:
-            print(i)      
+            if _printcommand:
+                print(i)      
             for j in i:
                 if j == '\n':
                     todo.append(' ')
@@ -364,8 +366,9 @@ def process_file(user_file):
                     todo.append(j)
                     if j != ' ':
                         _linecounter.append(value)
-        print('-----------------')
-        print('')
+        if _printcommand:
+            print('-----------------')
+            print('')
     
     except FileNotFoundError:
         _fileNotFound = True
@@ -389,10 +392,7 @@ def main():
     global _fileNotFound
     _fileNotFound = False
     _linecounter = deque()
-    
-    
-    
-    
+     
     #run loop until user enters quit
    # while True:
     user_file = input('Enter file you would like to open (type "quit" to exit): ')
@@ -402,6 +402,7 @@ def main():
         tokens, lexemes = lexer(todo)
     #user wants to quit    
     else:
+        print('Goodbye!')
         sys.exit()
      
     if not _fileNotFound:    

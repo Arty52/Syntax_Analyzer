@@ -14,7 +14,7 @@ from collections import deque
 ####################
 ##Global Variables##
 ####################
-_printcmd = True            #toggles print to command terminal feature for the SA production
+_printcmd = False            #toggles print to command terminal feature for the SA production
 _printfile = True           #toggles print to filehandle feature for the SA production
 toProcess = deque()
 current = Lex()
@@ -734,7 +734,7 @@ def main():
             print('\nSyntax Analyser running...')
             getNext()                                       #get input
             rat15S()                                        #call Syntax Analyser
-            print('...Syntax Analyser finished!\n')
+            print('\n...Syntax Analyser finished!\n')
             
             #report to user if error or no error in syntax analysis
             print('There were no errors!') if _error else print('An error was found!')
@@ -744,8 +744,9 @@ def main():
         
         #ask user if they would like to run another file    
         _continue = input('\nWould you like to process another file? (yes/no): ')
-        if _continue == 'no':
-            break
+        if _continue == 'no' or _continue == 'quit':
+            print('Goodbye!')
+            sys.exit()
 
 if __name__ == '__main__':
     main()
