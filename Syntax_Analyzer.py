@@ -47,11 +47,13 @@ def error(expected):
         print('\nERROR\nExpected: {}'.format(expected))
         print('Current lexeme: {}'.format(current.lexeme))
         print('Current token: {}'.format(current.token))
+        print('Current line: {}'.format(current.line))
     
     if _printfile:
         print('\nERROR\nExpected: {}'.format(expected), file = outputFileHandle)
         print('Current lexeme: {}'.format(current.lexeme), file = outputFileHandle)
         print('Current token: {}'.format(current.token), file = outputFileHandle)
+        print('Current line: {}'.format(current.line), file = outputFileHandle)
     
     _error = False
     # sys.exit()      #exit program

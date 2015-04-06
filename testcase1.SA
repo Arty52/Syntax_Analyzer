@@ -7,3 +7,4 @@ ERROR
 Expected: @@
 Current lexeme: while
 Current token: keyword
+Current line: 1

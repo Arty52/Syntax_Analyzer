@@ -7,3 +7,4 @@ ERROR
 Expected: @@
 Current lexeme: hello
 Current token: identifier
+Current line: 1
