@@ -1,2 +1,3 @@
-# Syntax_Analyzer
-# Syntax_Analyzer
+#Syntax Analyser
+CPSC 323 - Compilers
+Assignment 2

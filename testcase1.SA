@@ -1,1 +1,9 @@
-testing
+Token: keyword        Lexeme: while
+<Rat15S>  ::=   <Opt Function Definitions>  @@  <Opt Declaration List> @@  <Statement List> 
+<Opt Function Definitions> ::= <Function Definitions> | <Empty>
+<Empty> ::= ε
+
+ERROR
+Expected: @@
+Current lexeme: while
+Current token: keyword
