@@ -1,0 +1,23 @@
+function helloWorld[]
+{
+    read(fileNamedSue);
+
+    write(fileNamedSally);
+}
+
+@@
+
+real who, what, where;
+
+@@
+
+while(who > where)
+{
+
+    write(2+2);
+    if (what < who)
+    {
+        write(who_what_where_why);
+    } 
+    endif
+}

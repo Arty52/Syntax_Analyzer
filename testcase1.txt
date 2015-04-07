@@ -1,5 +1,8 @@
-while(fahr<celc):=15;
-_hello real world [ != ]
-@@ while != real temp := 2.2;
-&& @@ %%s5t4 4 e:
-12345 b98765 jkjkjk 123jka ?
+@@
+boolean valid;
+@@
+if(5+5 > 2)
+valid := False;
+else
+return 6;
+endif

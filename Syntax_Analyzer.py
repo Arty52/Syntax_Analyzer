@@ -422,7 +422,7 @@ def _if():
             condition()
             
             if current.lexeme == ')':
-                getnext()
+                getNext()
                 statement()
                 ifPrime()
             else:
@@ -444,7 +444,7 @@ def ifPrime():
     if current.lexeme == 'endif':
         getNext()
     elif current.lexeme == 'else':
-        getnext()
+        getNext()
         statement()
         getNext() if current.lexeme == 'endif' else error('endif')
     else:
