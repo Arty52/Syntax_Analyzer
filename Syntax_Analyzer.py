@@ -15,7 +15,7 @@ from collections import deque
 ##Global Variables##
 ####################
 _printcmd = False            #toggles print to command terminal feature for the SA production
-_printfile = True           #toggles print to filehandle feature for the SA production
+_printfile = True            #toggles print to filehandle feature for the SA production
 toProcess = deque()
 current = Lex()
 peek_next = Lex()
